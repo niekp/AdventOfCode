@@ -11,19 +11,45 @@ $input = array_map(
     )
 );
 
-function flatten(array $array) {
+function flatten(array $array)
+{
     $return = array();
-    array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
+    array_walk_recursive($array, function ($a) use (&$return) {
+        $return[] = $a;
+    });
     return $return;
 }
 
-function countDistinctAnswers(array $answers): int {
+function countDistinctAnswers(array $answers): int
+{
     return count(array_unique(flatten($answers)));
 }
 
-$sum = array_reduce($input, function($carry, $item) {
+function countUnanimousAnswers(array $answers): int
+{
+    $persons = count($answers);
+
+    return count(
+        array_filter( // Filter the answers where the amount equals the number of persons in the group
+            array_count_values(
+                flatten($answers)
+            ),
+            fn ($amount) => $amount == $persons
+        )
+    );
+}
+
+$distinct = array_reduce($input, function ($carry, $item) {
     $carry += countDistinctAnswers($item);
     return $carry;
 });
 
-print_r($sum);
+$unanimous = array_reduce($input, function ($carry, $item) {
+    $carry += countUnanimousAnswers($item);
+    return $carry;
+});
+
+print_r([
+    'Distinct' => $distinct,
+    'Unanimous' => $unanimous,
+]);
