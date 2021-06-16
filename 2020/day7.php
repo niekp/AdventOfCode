@@ -1,9 +1,9 @@
 <?php
 class Bag
 {
-    public array $contains = array();
+    private array $contains = array();
     public string $color;
-    public string $rule;
+    private string $rule;
 
     public function __construct(
         string $color,
@@ -52,7 +52,7 @@ class Organizer
     ) {
         // Create bags
         $this->bags = array_map(
-            fn ($rule) => new Bag($this->getBagColor($rule), $rule),
+            fn ($rule) => new Bag($this->get_bag_color($rule), $rule),
             $rules
         );
 
@@ -66,7 +66,7 @@ class Organizer
                         return;
                     }
                     if (preg_match_all('/(\d*) ([A-z ]*) (bag.?\.?)/', $contains_rule, $matches)) {
-                        $matchedBag = $this->findBag(reset($matches[2]));
+                        $matchedBag = $this->find_bag(reset($matches[2]));
                         $bag->add_contains($matchedBag, reset($matches[1]));
                     }
                 }
@@ -74,12 +74,12 @@ class Organizer
         });
     }
 
-    private function getBagColor(string $rule)
+    private function get_bag_color(string $rule): string
     {
         return trim(explode("bags", $rule)[0]);
     }
 
-    public function findBag(string $color): Bag
+    private function find_bag(string $color): Bag
     {
         $matches = array_filter($this->bags, fn ($bag) => $bag->color == $color);
         return reset($matches);
