@@ -1,5 +1,5 @@
 <?php
-class validator
+class Validator
 {
     private const REQUIRED_FIELDS = [
         'byr' => 'Birth Year',
@@ -80,7 +80,7 @@ class validator
     }
 }
 
-$validator = new validator(file_get_contents("input/day4.txt"));
+$validator = new Validator(file_get_contents("input/day4.txt"));
 $valid_passports = $validator->get_valid_passports();
 
 var_dump(count($valid_passports));

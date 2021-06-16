@@ -22,7 +22,7 @@ class Ship
         $this->speed['Y'] = $speedY;
     }
 
-    private function enlargeMap()
+    private function enlarge_map()
     {
         foreach ($this->map as $key => &$row) {
             $row .= $this->input[$key];
@@ -52,7 +52,7 @@ class Ship
             $this->fly();
 
             if ($this->position['X'] >= strlen($this->map[0])) {
-                $this->enlargeMap();
+                $this->enlarge_map();
             }
 
             $this->mark();
@@ -62,7 +62,7 @@ class Ship
         return implode("\n", $this->map);
     }
 
-    public function countEncounters()
+    public function count_encounters()
     {
         $characters = array_merge(...array_map('str_split', $this->map));
         return array_count_values($characters)[self::ENCOUNTER];
@@ -75,7 +75,7 @@ $outputs = array();
 foreach ([[1, 1], [3, 1], [5, 1], [7, 1], [1, 2]] as &$speed) {
     $ship = new Ship($input, $speed[0], $speed[1]);
     $ship->execute();
-    $outputs[] = $ship->countEncounters();
+    $outputs[] = $ship->count_encounters();
 }
 
 print(array_product($outputs));
