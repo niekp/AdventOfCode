@@ -28,6 +28,14 @@ class Bag
         });
     }
 
+    public function contains_bags_amount(): int
+    {
+        return array_reduce($this->contains, function ($carry, $item) {
+            $carry += $item['amount'] + ($item['amount'] * $item['bag']->contains_bags_amount());
+            return $carry;
+        }, 0);
+    }
+
     public function rules()
     {
         return array_map( // trim and return all rules
@@ -79,7 +87,7 @@ class Organizer
         return trim(explode("bags", $rule)[0]);
     }
 
-    private function find_bag(string $color): Bag
+    public function find_bag(string $color): Bag
     {
         $matches = array_filter($this->bags, fn ($bag) => $bag->color == $color);
         return reset($matches);
@@ -90,9 +98,14 @@ $rules = explode("\n", file_get_contents("input/day7.txt"));
 
 $organizer = new Organizer($rules);
 
-print_r(count(
-    array_filter(
-        $organizer->bags,
-        fn (&$bag) => $bag->can_contain('shiny gold')
-    )
-));
+print_r(
+    [
+        'Amount that contain shiny gold bag' => count(
+            array_filter(
+                $organizer->bags,
+                fn (&$bag) => $bag->can_contain('shiny gold')
+            )
+        ),
+        'Amount of bags inside shiny gold' => $organizer->find_bag('shiny gold')->contains_bags_amount()
+    ]
+);
