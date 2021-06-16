@@ -5,11 +5,12 @@ class Ship
     private array $input;
     private array $map;
     private array $position;
+    private array $speed;
     private const TREE = '#';
     private const FREE = 'O';
     private const ENCOUNTER = 'X';
 
-    public function __construct($map)
+    public function __construct($map, $speedX, $speedY)
     {
         $this->input = $map;
         $this->map = $map;
@@ -17,6 +18,8 @@ class Ship
             'X' => 0,
             'Y' => 0,
         ];
+        $this->speed['X'] = $speedX;
+        $this->speed['Y'] = $speedY;
     }
 
     private function enlargeMap()
@@ -34,8 +37,8 @@ class Ship
 
     private function fly()
     {
-        $this->position['X'] += 3;
-        $this->position['Y'] += 1;
+        $this->position['X'] += $this->speed['X'];
+        $this->position['Y'] += $this->speed['Y'];
 
         return $this->position;
     }
@@ -67,8 +70,12 @@ class Ship
 }
 
 $input = explode("\n", file_get_contents("input/day3.txt"));
-$ship = new Ship($input);
+$outputs = array();
 
-$ship->execute();
+foreach ([[1, 1], [3, 1], [5, 1], [7, 1], [1, 2]] as &$speed) {
+    $ship = new Ship($input, $speed[0], $speed[1]);
+    $ship->execute();
+    $outputs[] = $ship->countEncounters();
+}
 
-echo $ship->countEncounters();
+print(array_product($outputs));
