@@ -5,14 +5,14 @@ class day2
 	private array $beatingMove = [
 		'A' => 'B',
 		'B' => 'C',
-		'C' => 'A'
+		'C' => 'A',
 	];
 
 	private array $turns;
 
 	public function __construct(array $turns)
 	{
-		$this->turns = array_filter($turns);
+		$this->turns = $turns;
 	}
 
 	/**
@@ -48,9 +48,11 @@ class day2
 	private function getMove(string $opponent, string $strategy): string
 	{
 		if ($strategy === 'A') {
-			return array_values(array_filter($this->beatingMove, static function ($move, $key) use ($opponent) {
-				return $key !== $opponent && $move !== $opponent;
-			}, ARRAY_FILTER_USE_BOTH))[0];
+			return array_values(
+				       array_filter($this->beatingMove, static function ($move, $key) use ($opponent) {
+					       return $key !== $opponent && $move !== $opponent;
+				       }, ARRAY_FILTER_USE_BOTH)
+			       )[0];
 		}
 		if ($strategy === 'B') {
 			return $opponent;
@@ -77,7 +79,7 @@ class day2
 	}
 }
 
-$turns = explode("\n", file_get_contents("input/day2.txt"));
+$turns = array_filter(explode("\n", file_get_contents("input/day2.txt")));
 
 print_r([
 	'part 1' => (new day2($turns))->execute(),
