@@ -35,11 +35,28 @@ class Stack
 	}
 }
 
-class Crane
+class Crane9000
 {
-	public static function move(Stack $origin, Stack $target)
+	public static function move(Stack $origin, Stack $target, int $amount)
 	{
-		$target->push($origin->pop());
+		for ($i = 0; $i < $amount; $i++) {
+			$target->push($origin->pop());
+		}
+	}
+}
+
+class Crane9001
+{
+	public static function move(Stack $origin, Stack $target, int $amount)
+	{
+		$popped = [];
+		for ($i = 0; $i < $amount; $i++) {
+			$popped[] = $origin->pop();
+		}
+
+		foreach (array_reverse($popped) as $item) {
+			$target->push($item);
+		}
 	}
 }
 
@@ -151,9 +168,11 @@ $input = file_get_contents("input/day5.txt");
 $parser = new Parser($input);
 
 foreach ($parser->getInstructions() as $instruction) {
-	for ($i = 0; $i < $instruction->amount; $i++) {
-		Crane::move($instruction->from, $instruction->to);
-	}
+	// Part 1
+	//Crane9000::move($instruction->from, $instruction->to, $instruction->amount);
+
+	// Part 2
+	Crane9001::move($instruction->from, $instruction->to, $instruction->amount);
 }
 
 $result = array_map(function (Stack $stack) {
@@ -161,5 +180,5 @@ $result = array_map(function (Stack $stack) {
 }, $parser->getStacks());
 
 print_r([
-	'part 1' => implode($result),
+	'result' => implode($result),
 ]);
